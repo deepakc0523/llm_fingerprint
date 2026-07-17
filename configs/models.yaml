@@ -1,0 +1,54 @@
+# Model Hyperparameters and Feature Engineering Configs
+
+feature_extraction:
+  stylometric:
+    use_lexical: true
+    use_syntactic: true
+    use_structural: true
+    char_ngram_range: [2, 5]
+    word_ngram_range: [1, 3]
+    max_features: 5000
+  embeddings:
+    transformer_model: "sentence-transformers/all-MiniLM-L6-v2"
+    batch_size: 32
+    max_length: 512
+    pooling: "mean"
+
+models:
+  classical:
+    model_type: "random_forest"  # Choices: "svm", "random_forest", "xgboost"
+    random_forest:
+      n_estimators: 200
+      max_depth: 15
+      min_samples_split: 5
+      n_jobs: -1
+    svm:
+      kernel: "rbf"
+      C: 10.0
+      gamma: "scale"
+    xgboost:
+      n_estimators: 300
+      learning_rate: 0.05
+      max_depth: 6
+      subsample: 0.8
+
+  transformer:
+    model_name: "roberta-base"
+    batch_size: 16
+    epochs: 5
+    learning_rate: 2.0e-5
+    weight_decay: 0.01
+    warmup_ratio: 0.1
+
+  open_set:
+    detector_type: "isolation_forest"  # Choices: "one_class_svm", "isolation_forest", "mahalanobis"
+    isolation_forest:
+      contamination: 0.1
+      n_estimators: 150
+      random_state: 42
+    one_class_svm:
+      nu: 0.1
+      kernel: "rbf"
+      gamma: "scale"
+    mahalanobis:
+      threshold_percentile: 95.0

@@ -1,0 +1,27 @@
+# LLM Generation Parameters for Stylometric Analysis Datasets
+
+generation:
+  output_format: "jsonl"
+  samples_per_prompt: 10
+  max_tokens: 1024
+  temperature: 0.7
+  top_p: 0.95
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+api_settings:
+  openai:
+    model: "gpt-4"
+    request_timeout: 30
+  anthropic:
+    model: "claude-3-opus-20240229"
+    request_timeout: 30
+  google:
+    model: "gemini-1.5-pro"
+    request_timeout: 30
+
+prompt_management:
+  template_dir: "generation/templates"
+  system_instructions: |
+    You are a professional writer. Write a detailed essay responding to the user's prompt.
+    Ensure your response is well-structured and grammatically correct.

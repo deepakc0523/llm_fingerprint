@@ -1,0 +1,35 @@
+# Dataset Configurations for Stylometric Analysis and Attribution
+
+data_paths:
+  raw_dir: "data/raw"
+  prefixes_dir: "data/prefixes"
+  generated_dir: "data/generated"
+  cleaned_dir: "data/cleaned"
+  features_dir: "data/features"
+  master_dir: "data/master"
+
+preprocessing:
+  min_char_length: 100
+  clean_html: true
+  remove_extra_whitespace: true
+  lowercase: false
+  segmentation:
+    strategy: "chunk"  # Choices: "chunk", "sentence", "paragraph"
+    chunk_size_words: 250
+    overlap_words: 50
+
+splits:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+
+known_generators:
+  - gpt4
+  - claude3
+  - gemini_pro
+  - llama3
+
+unknown_generators:
+  - mistral_large
+  - command_r
