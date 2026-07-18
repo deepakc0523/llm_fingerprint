@@ -96,10 +96,11 @@ dataset_engineering:
       streaming: true
 
     gutenberg:
-      hf_repo: "sedthh/gutenberg_english"
-      subset: null
+      hf_repo: "HuggingFaceFW/fineweb"
+      subset: "sample-10BT"
       split: "train"
-      text_field: "TEXT"
+      text_field: "text"
+      target_prefixes: 11147
       category: "literature"
       streaming: true
 
