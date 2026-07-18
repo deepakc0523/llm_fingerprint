@@ -72,7 +72,7 @@ dataset_engineering:
   datasets:
 
     wikitext:
-      hf_repo: "wikimedia/wikipedia
+      hf_repo: "wikimedia/wikipedia"
       subset: "20231101.en"
       split: "train"
       text_field: "text"
