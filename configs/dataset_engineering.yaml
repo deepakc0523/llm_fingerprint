@@ -80,10 +80,10 @@ dataset_engineering:
       streaming: true
 
     cnn_dailymail:
-      hf_repo: "cnn_dailymail"
-      subset: "3.0.0"
+      hf_repo: "argilla/news-summary"
+      subset: null
       split: "train"
-      text_field: "article"
+      text_field: "text"
       category: "news"
       streaming: true
 
