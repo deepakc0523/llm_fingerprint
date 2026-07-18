@@ -1,0 +1,112 @@
+# Dataset Engineering Pipeline Configuration
+# Stage 1: Prefix extraction from five source corpora.
+# All paths are relative to the project root (d:/Fingerprint).
+
+dataset_engineering:
+
+  # ── Reproducibility ────────────────────────────────────────────────────────
+  random_seed: 42
+  python_seed: 42
+  numpy_seed: 42
+
+  # ── Scale targets ──────────────────────────────────────────────────────────
+  target_total_prefixes: 50000
+
+  # ── Processing ─────────────────────────────────────────────────────────────
+  # Number of prefix records accumulated before each intermediate Parquet flush.
+  batch_size: 1000
+
+  # Save a resume checkpoint every N documents processed within a dataset.
+  checkpoint_interval: 5000
+
+  # ── Output ─────────────────────────────────────────────────────────────────
+  output_dir: "data/prefixes"
+  checkpoint_dir: "data/prefixes/.checkpoints"
+
+  # ── Logging ────────────────────────────────────────────────────────────────
+  log_level: "INFO"
+  log_file: "data/prefixes/pipeline.log"
+
+  # ── Tokenizer ──────────────────────────────────────────────────────────────
+  tokenizer:
+    model_name: "gpt2"
+    use_fast: true
+    add_special_tokens: false
+    truncation: false
+
+  # ── Prefix lengths (in tokens) ────────────────────────────────────────────
+  prefix_lengths: [64, 128, 256]
+
+  # ── Extraction strategy ───────────────────────────────────────────────────
+  extraction:
+    strategy: "sliding_window"
+    overlap_tokens: 32
+    minimum_document_tokens: 300
+
+  # ── Document balancing ────────────────────────────────────────────────────
+  sampling:
+    max_prefixes_per_document: 10
+
+  # ── Duplicate detection ───────────────────────────────────────────────────
+  duplicates:
+    method: "xxhash"
+    compare_normalized: true
+    global: true
+
+  # ── Language validation ───────────────────────────────────────────────────
+  language:
+    detector: "langdetect"
+    confidence: 0.95
+    allowed:
+      - en
+
+  # ── Storage settings ──────────────────────────────────────────────────────
+  storage:
+    format: parquet
+    compression: zstd
+    row_group_size: 10000
+
+  # ── Per-dataset configuration ─────────────────────────────────────────────
+  # Target prefixes per dataset can be adjusted, but the builder allows dynamic 
+  # contribution up to the global target of 50000.
+  datasets:
+
+    wikitext:
+      hf_repo: "wikitext"
+      subset: "wikitext-103-v1"
+      split: "train"
+      text_field: "text"
+      category: "encyclopedia"
+      streaming: true
+
+    cnn_dailymail:
+      hf_repo: "cnn_dailymail"
+      subset: "3.0.0"
+      split: "train"
+      text_field: "article"
+      category: "news"
+      streaming: true
+
+    xsum:
+      hf_repo: "EdinburghNLP/xsum"
+      subset: null
+      split: "train"
+      text_field: "document"
+      category: "news_summary"
+      streaming: true
+
+    gutenberg:
+      hf_repo: "sedthh/gutenberg_english"
+      subset: null
+      split: "train"
+      text_field: "TEXT"
+      category: "literature"
+      streaming: true
+
+    stackexchange:
+      hf_repo: "HuggingFaceH4/stack-exchange-preferences"
+      subset: null
+      split: "train"
+      text_field: "question"
+      category: "technical_qa"
+      streaming: true
