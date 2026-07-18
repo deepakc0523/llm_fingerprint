@@ -72,8 +72,8 @@ dataset_engineering:
   datasets:
 
     wikitext:
-      hf_repo: "wikitext"
-      subset: "wikitext-103-v1"
+      hf_repo: "wikimedia/wikipedia
+      subset: "20311101.en"
       split: "train"
       text_field: "text"
       category: "encyclopedia"
