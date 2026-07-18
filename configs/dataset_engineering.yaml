@@ -20,12 +20,12 @@ dataset_engineering:
   checkpoint_interval: 5000
 
   # ── Output ─────────────────────────────────────────────────────────────────
-  output_dir: "data/prefixes"
-  checkpoint_dir: "data/prefixes/.checkpoints"
+  output_dir: "/content/drive/MyDrive/Fingerprint/data/prefixes"
+  checkpoint_dir: "/content/drive/MyDrive/Fingerprint/checkpoints"
 
   # ── Logging ────────────────────────────────────────────────────────────────
   log_level: "INFO"
-  log_file: "data/prefixes/pipeline.log"
+  log_file: "content/drive/MyDrive/Fingerprint/logs/Pipeline.log"
 
   # ── Tokenizer ──────────────────────────────────────────────────────────────
   tokenizer:
