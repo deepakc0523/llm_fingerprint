@@ -1,27 +1,51 @@
-# LLM Generation Parameters for Stylometric Analysis Datasets
+# ==============================================================================
+# Configuration for LLM Synthetic Dataset Generation (Stage 2)
+# ==============================================================================
 
-generation:
-  output_format: "jsonl"
-  samples_per_prompt: 10
-  max_tokens: 1024
-  temperature: 0.7
-  top_p: 0.95
-  frequency_penalty: 0.0
-  presence_penalty: 0.0
+# ── Model Selection ───────────────────────────────────────────────────────────
+# Selected model alias: llama3, qwen2_5, gemma2, mistral, phi3
+model: "llama3"
 
-api_settings:
-  openai:
-    model: "gpt-4"
-    request_timeout: 30
-  anthropic:
-    model: "claude-3-opus-20240229"
-    request_timeout: 30
-  google:
-    model: "gemini-1.5-pro"
-    request_timeout: 30
+# HuggingFace repository identifiers or local directory paths
+model_paths:
+  llama3: "meta-llama/Llama-3.2-3B-Instruct"
+  qwen2_5: "Qwen/Qwen2.5-7B-Instruct"
+  gemma2: "google/gemma-2-9b-it"
+  mistral: "mistralai/Mistral-7B-Instruct-v0.3"
+  phi3: "microsoft/Phi-3.5-mini-instruct"
 
-prompt_management:
-  template_dir: "generation/templates"
-  system_instructions: |
-    You are a professional writer. Write a detailed essay responding to the user's prompt.
-    Ensure your response is well-structured and grammatically correct.
+# ── Generation Hyperparameters ────────────────────────────────────────────────
+temperature: 0.7
+top_p: 0.9
+max_new_tokens: 512
+batch_size: 8
+
+# ── Formatting Strategies ─────────────────────────────────────────────────────
+# Options: raw, chat, instruction, completion
+prompt_mode: "raw"
+
+# ── File and Directory Configurations ─────────────────────────────────────────
+input_file: "data/prefixes/prefix_cache.parquet"
+output_directory: "data/synthetic"
+merged_directory: "data/merged"
+
+# Configurable output filename (default: "generated.parquet")
+output_filename: "generated.parquet"
+
+# ── Runtime Environment ───────────────────────────────────────────────────────
+# Target execution device: "cuda", "mps", "cpu", or "auto" for automatic detection
+device: "auto"
+
+use_bf16: true         # Set to true for bfloat16, false for float32 or float16
+load_in_8bit: false    # Bitsandbytes 8-bit quantization option for Colab
+load_in_4bit: false    # Bitsandbytes 4-bit quantization option for Colab
+
+# ── Pipeline Control ──────────────────────────────────────────────────────────
+# Save progress checkpoint after generating N batches or records
+checkpoint_frequency: 100
+
+# Optional limit on the number of prefixes to process (null or positive integer)
+max_samples: null
+
+log_level: "INFO"
+seed: 42
