@@ -4,7 +4,7 @@
 
 # ── Model Selection ───────────────────────────────────────────────────────────
 # Selected model alias: llama3, qwen2_5, gemma2, mistral, phi3
-model: "llama3"
+model: "qwen2_5"
 
 # HuggingFace repository identifiers or local directory paths
 model_paths:
