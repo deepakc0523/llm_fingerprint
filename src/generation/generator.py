@@ -9,6 +9,7 @@ Optimized with robust batch recovery, environment telemetry, and real-time speed
 
 from __future__ import annotations
 
+import argparse
 import logging
 import os
 import time
@@ -20,7 +21,7 @@ import pyarrow.parquet as pq
 import torch
 from tqdm import tqdm
 
-from src.dataset.utils import get_logger
+from src.dataset.utils import get_logger, load_yaml_config
 from src.generation.checkpoint import CheckpointManager
 from src.generation.generation_utils import set_seed, Timer
 from src.generation.metadata import MetadataTracker
@@ -310,3 +311,24 @@ class LLMGeneratorPipeline:
         self.metadata_tracker.save_metadata(self.config)
         self.log.info("Generation run completed successfully.")
         cleanup_gpu()
+
+
+def _parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="python -m src.generation.generator",
+        description="Fingerprint Stage 2 — LLM Text Generation Pipeline",
+    )
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="configs/generation.yaml",
+        help="Path to generation.yaml (default: configs/generation.yaml)",
+    )
+    return parser.parse_args(argv)
+
+
+if __name__ == "__main__":
+    args = _parse_args()
+    config = load_yaml_config(args.config)
+    pipeline = LLMGeneratorPipeline(config)
+    pipeline.run()
