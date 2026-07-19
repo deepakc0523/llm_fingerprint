@@ -109,7 +109,7 @@ class LLMGeneratorPipeline:
         # Read file row-group by row-group to minimize RAM usage
         for i in range(parquet_file.num_row_groups):
             self.log.debug("Reading row group %d/%d from cache", i + 1, parquet_file.num_row_groups)
-            table = parquet_file.read_row_group(i, columns=["prefix_id", "dataset_name", "category", "human_prefix"])
+            table = parquet_file.read_row_group(i, columns=["prefix_id", "dataset_name", "category", "prefix_text"])
             df = table.to_pandas()
             for record in df.to_dict(orient="records"):
                 yield record
@@ -191,7 +191,7 @@ class LLMGeneratorPipeline:
             
             try:
                 # Format and tokenize
-                prefixes_text = [row["human_prefix"] for row in batch_rows]
+                prefixes_text = [row["prefix_text"] for row in batch_rows]
                 formatted_prompts = formatter.format_batch(prefixes_text)
 
                 inputs = tokenizer(
@@ -233,7 +233,7 @@ class LLMGeneratorPipeline:
                         prefix_id=row["prefix_id"],
                         dataset_name=row["dataset_name"],
                         category=row["category"],
-                        human_prefix=row["human_prefix"],
+                        human_prefix=row["prefix_text"],
                         generated_text=completion_text,
                         model_name=self.model_name,
                         temperature=self.temperature,
