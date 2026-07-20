@@ -225,15 +225,18 @@ class LLMGeneratorPipeline:
         # Collect and filter prefixes
         raw_prefixes = []
         try:
+            completed_records = len(self.checkpoint_mgr.completed_prefix_ids)
             for row in self.load_prefixes_chunked():
+                # Apply max_samples limit if specified, taking into account already completed records
+                if self.max_samples is not None:
+                    target_remaining = max(0, self.max_samples - completed_records)
+                    if len(raw_prefixes) >= target_remaining:
+                        self.log.info("Reached maximum requested sample limit of %d (target remaining: %d)", self.max_samples, target_remaining)
+                        break
+
                 prefix_id = row.get("prefix_id")
                 if prefix_id and not self.checkpoint_mgr.is_completed(prefix_id):
                     raw_prefixes.append(row)
-                
-                # Apply max_samples limit if specified
-                if self.max_samples is not None and len(raw_prefixes) >= self.max_samples:
-                    self.log.info("Reached maximum requested sample limit of %d", self.max_samples)
-                    break
         except Exception as e:
             self.log.error("Failed to load prefix cache: %s", e)
             raise e
