@@ -114,6 +114,32 @@ def resolve_dtype(config: Dict[str, Any]) -> str:
     return "float16"
 
 
+def check_prefix_caching_supported() -> bool:
+    """
+    Checks if vLLM prefix caching is supported in the current environment.
+
+    Prefix caching requires:
+      1. A CUDA-capable GPU (not supported on CPU or MPS backends).
+      2. Support in the installed vLLM version (i.e. 'enable_prefix_caching'
+         is a valid argument of EngineArgs / LLM).
+    """
+    if not torch.cuda.is_available():
+        _log.warning("CUDA is not available. Prefix caching is unsupported.")
+        return False
+
+    try:
+        from vllm.engine.arg_utils import EngineArgs
+        import inspect
+        sig = inspect.signature(EngineArgs.__init__)
+        if "enable_prefix_caching" in sig.parameters:
+            return True
+        _log.warning("enable_prefix_caching parameter not found in EngineArgs signature.")
+    except Exception as exc:
+        _log.warning("Could not verify prefix caching support via vLLM signature: %s", exc)
+
+    return False
+
+
 def load_vllm_model(model_path: str, config: Dict[str, Any]):
     """
     Creates and returns a configured vLLM ``LLM`` engine instance.
@@ -143,6 +169,24 @@ def load_vllm_model(model_path: str, config: Dict[str, Any]):
     RuntimeError
         If the engine fails to initialize even without prefix caching.
     """
+    # 1. Apply a robust monkey patch for the Hugging Face Transformers tokenizer.
+    # Newer transformers versions (>= 4.54.0 / 5.x) removed `all_special_tokens_extended`.
+    # Older vLLM versions (e.g. 0.10.x/0.11.x) access this attribute during tokenizer loading.
+    # Dynamically patching it on PreTrainedTokenizerBase prevents AttributeError.
+    try:
+        import transformers
+        if hasattr(transformers.tokenization_utils_base, "PreTrainedTokenizerBase"):
+            if not hasattr(transformers.tokenization_utils_base.PreTrainedTokenizerBase, "all_special_tokens_extended"):
+                _log.info(
+                    "Monkey-patching PreTrainedTokenizerBase to add missing "
+                    "'all_special_tokens_extended' attribute."
+                )
+                transformers.tokenization_utils_base.PreTrainedTokenizerBase.all_special_tokens_extended = property(
+                    lambda self: self.all_special_tokens
+                )
+    except Exception as exc:
+        _log.warning("Failed to apply transformers tokenizer monkey-patch: %s", exc)
+
     try:
         from vllm import LLM
     except ImportError as exc:
@@ -159,6 +203,15 @@ def load_vllm_model(model_path: str, config: Dict[str, Any]):
     tensor_parallel_size = int(config.get("tensor_parallel_size", 1))
     trust_remote_code = bool(config.get("trust_remote_code", True))
     use_prefix_caching = bool(config.get("use_prefix_caching", True))
+
+    # Pre-validate prefix caching support before engine initialization.
+    if use_prefix_caching:
+        if not check_prefix_caching_supported():
+            _log.warning(
+                "Prefix caching is unsupported in this environment. "
+                "Disabling prefix caching completely before engine initialization."
+            )
+            use_prefix_caching = False
 
     _log.info(
         "Initializing vLLM engine | model=%s | quantization=%s | dtype=%s | "
@@ -183,7 +236,7 @@ def load_vllm_model(model_path: str, config: Dict[str, Any]):
     if quantization is not None:
         base_kwargs["quantization"] = quantization
 
-    # Attempt 1: with prefix caching (if requested by config)
+    # Attempt 1: with prefix caching (if requested by config and verified supported)
     if use_prefix_caching:
         try:
             llm = LLM(**base_kwargs, enable_prefix_caching=True)

@@ -76,6 +76,10 @@ def run_test():
     test_config.update({
         "backend": backend,
         "device": device,
+        "model": "qwen_tiny",
+        "model_paths": {
+            "qwen_tiny": "Qwen/Qwen2.5-0.5B-Instruct"
+        },
         "input_file": mock_input_parquet,
         "output_directory": os.path.join(test_dir, "synthetic"),
         "checkpoint_frequency": 3,
@@ -83,7 +87,7 @@ def run_test():
         "batch_size": 4 if backend == "transformers" else 4,  # Keep batch sizes low for quick test
     })
 
-    model_alias = test_config.get("model", "qwen2_5")
+    model_alias = test_config.get("model", "qwen_tiny")
     dest_parquet = os.path.join(test_config["output_directory"], model_alias, "generated.parquet")
     dest_checkpoint = os.path.join(test_config["output_directory"], model_alias, "checkpoint.json")
     dest_metadata = os.path.join(test_config["output_directory"], model_alias, "metadata.json")
