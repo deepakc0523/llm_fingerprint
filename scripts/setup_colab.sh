@@ -29,9 +29,9 @@ echo "Installing pinned system dependencies..."
 pip install -r requirements.txt --quiet
 
 # 3. Install compatible vLLM release
-# vllm==0.4.2 is fully compatible with torch 2.3.0 and transformers 4.40.2 on Colab
+# vllm==0.10.1.1 is fully compatible with torch>=2.4.0 and transformers>=4.45.2 on Colab
 echo "Installing vLLM engine..."
-pip install vllm==0.4.2 --quiet
+pip install vllm==0.10.1.1 --quiet
 
 # 4. Verify environment status
 echo "Verifying environment compatibility..."
