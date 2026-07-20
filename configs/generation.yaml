@@ -14,14 +14,53 @@ model_paths:
   mistral: "mistralai/Mistral-7B-Instruct-v0.3"
   phi3: "microsoft/Phi-3.5-mini-instruct"
 
+# ── Backend Selection ──────────────────────────────────────────────────────────
+# "vllm"         → high-throughput production runs (recommended)
+# "transformers" → fallback for debugging or environments without vLLM
+# Switch by changing this ONE line — no code modifications required.
+backend: "vllm"
+
+# ── vLLM Engine Settings ───────────────────────────────────────────────────────
+# Only used when backend: vllm
+
+# Fraction of GPU VRAM reserved for the model + KV cache (0.0–1.0)
+gpu_memory_utilization: 0.90
+
+# Number of GPUs for tensor parallelism (1 = single GPU; increase for multi-GPU)
+tensor_parallel_size: 1
+
+# Quantization: "auto" (detect AWQ/GPTQ from model path, else FP16)
+#               "awq"  / "gptq" (explicit)
+#               null   (no quantization, use FP16 / default dtype)
+quantization: "auto"
+
+# Compute dtype: "auto" (BF16 if GPU supports it, else FP16)
+#                "float16" / "bfloat16" (explicit)
+dtype: "auto"
+
+# Enable vLLM prefix caching for shared prompt prefixes (graceful fallback if unsupported)
+use_prefix_caching: true
+
+# Trust remote code when loading custom model architectures
+trust_remote_code: true
+
 # ── Generation Hyperparameters ────────────────────────────────────────────────
 temperature: 0.7
 top_p: 0.9
 max_new_tokens: 128
-batch_size: 8
+
+# batch_size controls:
+#   backend: vllm         → submission chunk size per llm.generate() call
+#                           (adaptive OOM recovery halves this automatically:
+#                            256 → 128 → 64 → 32 → 16)
+#                           Recommended: 256 or higher for vLLM.
+#   backend: transformers → actual GPU batch size.
+#                           Recommended: 8–16 for 7–9B models on a single GPU.
+batch_size: 256
 
 # ── Formatting Strategies ─────────────────────────────────────────────────────
 # Options: raw, chat, instruction, completion
+# Note: "chat" mode loads only the HF tokenizer (no model weights) on vLLM backend.
 prompt_mode: "raw"
 
 # ── File and Directory Configurations ─────────────────────────────────────────
@@ -33,19 +72,26 @@ merged_directory: "data/merged"
 output_filename: "generated.parquet"
 
 # ── Runtime Environment ───────────────────────────────────────────────────────
-# Target execution device: "cuda", "mps", "cpu", or "auto" for automatic detection
+# Target execution device: "cuda", "mps", "cpu", or "auto"
+# Only used by the Transformers backend; vLLM manages device placement internally.
 device: "auto"
 
-use_bf16: true         # Set to true for bfloat16, false for float32 or float16
-load_in_8bit: false    # Bitsandbytes 8-bit quantization option for Colab
-load_in_4bit: false    # Bitsandbytes 4-bit quantization option for Colab
+# Transformers backend precision / quantization options (ignored when backend: vllm)
+use_bf16: true         # bfloat16 if true; float32 or float16 if false
+load_in_8bit: false    # Bitsandbytes 8-bit quantization
+load_in_4bit: false    # Bitsandbytes 4-bit quantization
 
 # ── Pipeline Control ──────────────────────────────────────────────────────────
-# Save progress checkpoint after generating N batches or records
+# Save a checkpoint after processing every N batches (also triggers GPU telemetry log)
 checkpoint_frequency: 100
 
-# Optional limit on the number of prefixes to process (null or positive integer)
-max_samples: null
+# Maximum number of prefixes to process.
+# Change ONLY this value to scale the run — no code modifications required:
+#   max_samples: 1000    → benchmark run
+#   max_samples: 10000   → medium run
+#   max_samples: 50000   → full production run
+#   max_samples: null    → process the entire dataset
+max_samples: 1000
 
 log_level: "INFO"
 seed: 42

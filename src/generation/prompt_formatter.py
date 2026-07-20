@@ -8,7 +8,7 @@ Supports: 'raw', 'chat', 'instruction', and 'completion'.
 from __future__ import annotations
 
 import logging
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 from transformers import PreTrainedTokenizer
 
 _log = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class PromptFormatter:
 
     def __init__(
         self,
-        tokenizer: PreTrainedTokenizer,
+        tokenizer: Optional[PreTrainedTokenizer] = None,
         mode: str = "raw",
         instruction_template: str = "Continue writing the following text naturally, maintaining the tone, style, and vocabulary:\n\n{prefix}",
         plain_instruction_format: str = "Instruction: Continue the following text naturally.\nText: {prefix}\nCompletion:",
@@ -29,11 +29,15 @@ class PromptFormatter:
         Parameters
         ----------
         tokenizer:
-            The model's pretrained tokenizer.
+            The model's pretrained tokenizer.  Optional — only required for
+            ``'chat'`` mode (``apply_chat_template``).  Pass ``None`` when
+            using ``'raw'``, ``'instruction'``, or ``'completion'`` modes,
+            or when the vLLM backend handles inference without a tokenizer.
         mode:
             Formatting mode/strategy:
             - 'raw': Pass the prefix text directly without modifications.
             - 'chat': Wrap the prefix in an instruction and use tokenizer.apply_chat_template.
+              Requires a tokenizer; falls back to 'instruction' format with a warning if None.
             - 'instruction': Standard plain-text instruction format (no chat template).
             - 'completion': Configurable completion format.
         instruction_template:
@@ -57,6 +61,15 @@ class PromptFormatter:
                 supported_modes,
             )
             self.mode = "raw"
+
+        # Guard: chat mode requires a tokenizer for apply_chat_template.
+        if self.mode == "chat" and self.tokenizer is None:
+            _log.warning(
+                "prompt_mode='chat' requires a tokenizer (tokenizer=None was provided). "
+                "Falling back to 'instruction' plain-text format. "
+                "To use chat mode, pass the HF tokenizer when constructing PromptFormatter."
+            )
+            self.mode = "instruction"
 
         _log.info("PromptFormatter initialized with mode: %s", self.mode)
 

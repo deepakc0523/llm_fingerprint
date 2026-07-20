@@ -1,14 +1,19 @@
-numpy>=1.22.0
-pandas>=1.5.0
-scikit-learn>=1.0.0
-transformers>=4.30.0
-torch>=1.11.0
-pyyaml>=6.0
-matplotlib>=3.5.0
-seaborn>=0.11.0
-tqdm>=4.64.0
-datasets>=2.14.0
-pyarrow>=12.0.0
-ftfy>=6.1.1
-langdetect>=1.0.9
-xxhash>=3.2.0
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.2.2
+transformers==4.40.2
+torch==2.3.0
+pyyaml==6.0.1
+matplotlib==3.7.1
+seaborn==0.12.2
+tqdm==4.66.1
+datasets==2.19.1
+pyarrow==14.0.1
+ftfy==6.1.1
+langdetect==1.0.9
+xxhash==3.4.1
+
+# ── vLLM backend (required only when backend: vllm in generation.yaml) ────────
+# Install separately or via Colab setup: pip install vllm==0.4.2
+# Pinned version chosen for stability with torch 2.3.0 and transformers 4.40.2
+# vllm==0.4.2
