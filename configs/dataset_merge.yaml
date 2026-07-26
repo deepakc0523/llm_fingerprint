@@ -1,0 +1,42 @@
+# Configuration for LLM Fingerprinting Dataset Management Pipeline
+
+input_dir: "data/synthetic"
+output_dir: "data/merged"
+log_filename: "merge.log"
+
+required_files:
+  - "generated.parquet"
+  - "metadata.json"
+  - "checkpoint.json"
+
+expected_columns:
+  prefix_id: "object"
+  dataset_name: "object"
+  category: "object"
+  human_prefix: "object"
+  generated_text: "object"
+  model_name: "object"
+  temperature: "float64"
+  top_p: "float64"
+  max_new_tokens: "int64"
+  prompt_length: "int64"
+  completion_length: "int64"
+  generation_time: "float64"
+  timestamp: "object"
+
+text_columns:
+  prefix: "human_prefix"
+  generated: "generated_text"
+  id: "prefix_id"
+
+split:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+  stratify_column: "model_label"
+
+report:
+  title: "LLM Fingerprinting Dataset Merge Report"
+  author: "Research Software Engineering & MLOps Team"
+  project_version: "1.0.0"
