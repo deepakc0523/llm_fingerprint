@@ -1,0 +1,2 @@
+pipeline_name,total_samples,total_token_count,total_sentence_count,total_character_count,vocabulary_size,type_token_ratio,lexical_diversity,average_document_length_chars,average_token_length_chars,average_sentence_length_tokens
+traditional,5238,175937,5238,1269469,20215,0.114899,0.114899,242.36,7.22,33.59

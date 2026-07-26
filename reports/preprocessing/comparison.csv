@@ -1,0 +1,12 @@
+Metric,Pipeline A (Fingerprint-Preserving),Pipeline B (Traditional NLP)
+Target Pipeline Purpose,Preserve Stylistic LLM Signatures,Classical Text Cleaning & Normalization
+Total Samples Preserved,5238,5238
+Total Corpus Token Count,"330,529","175,937"
+Vocabulary Size (Unique Tokens),"38,631","20,215"
+Type-Token Ratio (TTR),0.116876,0.114899
+Average Document Length (Chars),371.95,242.36
+Average Sentence Length (Tokens),15.46,33.59
+Characters Removed by Cleaning,0 (Baseline),"678,785"
+Words / Stopwords Removed,0 (Baseline),"154,592"
+Unique Vocab Tokens Stripped,0 (Baseline),"18,416"
+Processing Execution Time,3.42 sec,5.76 sec

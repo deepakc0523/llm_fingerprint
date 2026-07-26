@@ -1,0 +1,8 @@
+Metric,Value
+Pipeline Name,fingerprint
+Total Processed Samples,5238
+Removed Records Count,2
+Total Token Count,330529
+Vocabulary Size,38631
+Type-Token Ratio (TTR),0.116876
+Processing Time (sec),3.42

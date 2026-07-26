@@ -1,0 +1,2 @@
+pipeline_name,total_samples,total_token_count,total_sentence_count,total_character_count,vocabulary_size,type_token_ratio,lexical_diversity,average_document_length_chars,average_token_length_chars,average_sentence_length_tokens
+fingerprint,5238,330529,21385,1948254,38631,0.116876,0.116876,371.95,5.89,15.46

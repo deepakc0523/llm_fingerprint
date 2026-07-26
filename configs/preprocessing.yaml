@@ -1,0 +1,44 @@
+# Configuration for LLM Fingerprinting Preprocessing Framework
+
+active_pipeline: "all"  # Options: 'fingerprint', 'traditional', or 'all' (runs both & generates comparison)
+
+dataset_path: "data/merged/merged_dataset.parquet"
+output_base_dir: "data/processed"
+reports_base_dir: "reports/preprocessing"
+log_filename: "preprocessing.log"
+
+text_columns:
+  generated_text: "generated_text"
+  human_prefix: "human_prefix"
+  prefix_id: "prefix_id"
+  model_label: "model_label"
+
+validation:
+  min_char_length: 5
+  max_char_length: 10000
+  near_duplicate_threshold: 0.98
+
+pipeline_a: # Fingerprint-Preserving NLP
+  unicode_normalization: "NFC"
+  clean_whitespace: true
+  decode_html: true
+  remove_invalid_chars: true
+
+pipeline_b: # Traditional NLP
+  unicode_normalization: "NFC"
+  clean_whitespace: true
+  decode_html: true
+  lowercase: true
+  remove_punctuation: true
+  expand_contractions: true
+  remove_stopwords: true
+  lemmatization: true
+  normalize_quotes: true
+  normalize_apostrophes: true
+  remove_empty_docs: true
+
+report:
+  title: "LLM Fingerprinting NLP Preprocessing Report"
+  author: "Senior NLP Research Team"
+  project_name: "Fingerprint"
+  version: "1.0.0"
