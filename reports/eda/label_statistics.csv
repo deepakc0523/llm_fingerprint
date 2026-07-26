@@ -1,0 +1,6 @@
+Model Label,Total Samples,Avg Response Length (Chars),Vocabulary Size,Total Tokens,Type-Token Ratio (TTR),Avg Sentence Length (Chars),Avg Word Length (Chars),Unique Token Ratio
+gemma2,1000,276.02,11849,43864,0.27013,92.28,5.23,0.27013
+llama3,984,283.78,10869,45883,0.236885,97.13,5.06,0.236885
+mistral,1000,245.07,9136,42605,0.214435,79.9,4.74,0.214435
+phi3,1000,471.98,17971,78625,0.228566,91.06,4.97,0.228566
+qwen_tiny,1256,547.11,14144,119475,0.118385,94.55,4.73,0.118385

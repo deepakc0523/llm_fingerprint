@@ -1,0 +1,17 @@
+Metric,Value
+Total Samples,5240
+Total Classes,5
+Class Imbalance Ratio,1.2764
+Rows,5240
+Columns,14
+Memory Usage (MB),7.09
+Dataset File Size (MB),1.38
+Duplicate Rows,0
+Duplicate Prefix IDs,4240
+Duplicate Generated Texts,367
+Total Missing Values,0
+Class Count (qwen_tiny),1256
+Class Count (gemma2),1000
+Class Count (mistral),1000
+Class Count (phi3),1000
+Class Count (llama3),984

@@ -1,0 +1,64 @@
+Category,Item,Count,Frequency_Percentage
+Overview,Total Tokens,330452.0,100.0
+Overview,Vocabulary Size (Unique),38674.0,100.0
+Overview,Type-Token Ratio (TTR),0.117034,11.7034
+Most Frequent Words,'the',22668.0,6.8597
+Most Frequent Words,'of',10601.0,3.208
+Most Frequent Words,'a',10184.0,3.0818
+Most Frequent Words,'to',9538.0,2.8863
+Most Frequent Words,'and',9094.0,2.752
+Most Frequent Words,'in',6178.0,1.8696
+Most Frequent Words,'is',5263.0,1.5927
+Most Frequent Words,'The',5259.0,1.5915
+Most Frequent Words,'that',3411.0,1.0322
+Most Frequent Words,'was',3194.0,0.9666
+Most Frequent Words,'for',3046.0,0.9218
+Most Frequent Words,'with',2258.0,0.6833
+Most Frequent Words,'are',2154.0,0.6518
+Most Frequent Words,'has',2029.0,0.614
+Most Frequent Words,'be',2026.0,0.6131
+Most Frequent Words,'on',1942.0,0.5877
+Most Frequent Words,'not',1913.0,0.5789
+Most Frequent Words,'it',1857.0,0.562
+Most Frequent Words,'I',1827.0,0.5529
+Most Frequent Words,'have',1644.0,0.4975
+Top Bigrams,'of the',3423.0,1.0359
+Top Bigrams,'in the',2432.0,0.736
+Top Bigrams,'to the',1162.0,0.3516
+Top Bigrams,'and the',1113.0,0.3368
+Top Bigrams,'is a',991.0,0.2999
+Top Bigrams,'on the',791.0,0.2394
+Top Bigrams,'for the',770.0,0.233
+Top Bigrams,'that the',715.0,0.2164
+Top Bigrams,'to be',708.0,0.2143
+Top Bigrams,'has been',614.0,0.1858
+Top Bigrams,'with the',593.0,0.1795
+Top Bigrams,'by the',561.0,0.1698
+Top Bigrams,'of a',551.0,0.1667
+Top Bigrams,'with a',509.0,0.154
+Top Bigrams,'is the',493.0,0.1492
+Top Bigrams,'from the',476.0,0.144
+Top Bigrams,'in a',462.0,0.1398
+Top Bigrams,'was a',422.0,0.1277
+Top Bigrams,'is not',381.0,0.1153
+Top Bigrams,'as a',342.0,0.1035
+Top Trigrams,'one of the',118.0,0.0357
+Top Trigrams,'This is a',110.0,0.0333
+Top Trigrams,'be able to',109.0,0.033
+Top Trigrams,'member of the',108.0,0.0327
+Top Trigrams,'a lot of',104.0,0.0315
+Top Trigrams,'part of the',98.0,0.0297
+Top Trigrams,'to be a',94.0,0.0284
+Top Trigrams,'has been a',94.0,0.0284
+Top Trigrams,'the United States',92.0,0.0278
+Top Trigrams,'going to be',89.0,0.0269
+Top Trigrams,'a member of',87.0,0.0263
+Top Trigrams,'in the United',86.0,0.026
+Top Trigrams,'as well as',85.0,0.0257
+Top Trigrams,'the number of',83.0,0.0251
+Top Trigrams,'oil oil oil',79.0,0.0239
+Top Trigrams,'of the most',76.0,0.023
+Top Trigrams,'and it is',75.0,0.0227
+Top Trigrams,"""I'm not sure""",75.0,0.0227
+Top Trigrams,'a way to',70.0,0.0212
+Top Trigrams,'the development of',68.0,0.0206

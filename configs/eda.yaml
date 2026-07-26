@@ -1,0 +1,24 @@
+# Configuration for LLM Fingerprinting EDA Pipeline
+
+dataset_path: "data/merged/merged_dataset.parquet"
+output_dir: "reports/eda"
+figures_dir: "reports/eda/figures"
+
+text_columns:
+  generated_text: "generated_text"
+  human_prefix: "human_prefix"
+  prefix_id: "prefix_id"
+  model_label: "model_label"
+
+target_labels:
+  - "gemma2"
+  - "llama3"
+  - "mistral"
+  - "phi3"
+  - "qwen_tiny"
+
+report:
+  title: "Exploratory Data Analysis: LLM Fingerprinting Dataset"
+  author: "Senior Machine Learning & NLP Research Team"
+  project_name: "Fingerprint"
+  version: "1.0.0"
