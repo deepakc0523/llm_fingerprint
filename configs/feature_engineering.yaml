@@ -1,0 +1,122 @@
+# =============================================================================
+# Feature Engineering Configuration
+# Project : Fingerprint — LLM Fingerprinting Framework
+# Stage   : Feature Engineering
+# =============================================================================
+
+# --------------------------------------------------------------------------
+# Global
+# --------------------------------------------------------------------------
+project_name: "Fingerprint"
+stage: "feature_engineering"
+random_seed: 42
+
+# --------------------------------------------------------------------------
+# Input — paths produced by the Preprocessing stage
+# --------------------------------------------------------------------------
+input:
+  pipeline_a_path: "data/processed/fingerprint/fingerprint_dataset.parquet"   # Fingerprint-Preserving
+  pipeline_b_path: "data/processed/traditional/traditional_dataset.parquet"   # Traditional NLP
+
+# --------------------------------------------------------------------------
+# Output — feature matrices saved as numpy (.npz) + metadata (.json)
+# --------------------------------------------------------------------------
+output:
+  base_dir: "data/features"
+  tfidf_dir: "data/features/tfidf"
+  char_dir:  "data/features/char"
+  style_dir: "data/features/style"
+  emb_dir:   "data/features/embedding"
+
+# --------------------------------------------------------------------------
+# Column names
+# --------------------------------------------------------------------------
+columns:
+  text: "generated_text"
+  label: "model_label"
+
+# --------------------------------------------------------------------------
+# TF-IDF Feature Engineering
+# --------------------------------------------------------------------------
+tfidf:
+  word:
+    max_features: 50000
+    ngram_range: [1, 2]
+    min_df: 2
+    max_df: 0.95
+    sublinear_tf: true
+    analyzer: "word"
+  char:
+    max_features: 30000
+    ngram_range: [3, 5]
+    min_df: 2
+    max_df: 0.95
+    sublinear_tf: true
+    analyzer: "char_wb"
+
+# --------------------------------------------------------------------------
+# Character N-Gram Feature Engineering
+# --------------------------------------------------------------------------
+char_ngrams:
+  ngram_ranges:
+    - [2, 2]
+    - [3, 3]
+    - [4, 4]
+    - [2, 4]
+    - [3, 5]
+  max_features: 30000
+  min_df: 2
+  max_df: 0.95
+  sublinear_tf: true
+  analyzer: "char_wb"
+  combine: true        # stack all n-gram ranges into one matrix
+
+# --------------------------------------------------------------------------
+# Stylometric Feature Engineering
+# --------------------------------------------------------------------------
+stylometric:
+  # Lexical
+  compute_avg_word_length: true
+  compute_avg_sentence_length: true
+  compute_type_token_ratio: true
+  compute_hapax_legomena_ratio: true
+  compute_lexical_richness: true
+
+  # Punctuation & Symbol
+  compute_punctuation_ratios: true
+  punctuation_chars: [".", ",", "!", "?", ";", ":", "-", "\"", "'"]
+  compute_digit_ratio: true
+  compute_uppercase_ratio: true
+
+  # Structural
+  compute_paragraph_count: true
+  compute_avg_paragraph_length: true
+  compute_sentence_count: true
+  compute_whitespace_ratio: true
+
+  # Syntactic (regex-based)
+  compute_question_density: true
+  compute_exclamation_density: true
+  compute_conjunction_usage: true
+  compute_pronoun_density: true
+
+  # Readability
+  compute_flesch_reading_ease: true
+  compute_flesch_kincaid_grade: true
+
+# --------------------------------------------------------------------------
+# Sentence Embedding Feature Engineering
+# --------------------------------------------------------------------------
+embeddings:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  batch_size: 64
+  max_seq_length: 256
+  normalize_embeddings: true
+  device: "cpu"   # switch to "cuda" if GPU available
+
+# --------------------------------------------------------------------------
+# Logging
+# --------------------------------------------------------------------------
+logging:
+  log_file: "logs/feature_engineering.log"
+  level: "INFO"

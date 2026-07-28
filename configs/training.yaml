@@ -1,0 +1,135 @@
+# =============================================================================
+# Model Training Configuration
+# Project : Fingerprint — LLM Fingerprinting Framework
+# Stage   : Model Training & Evaluation
+# =============================================================================
+
+project_name: "Fingerprint"
+stage: "model_training"
+random_seed: 42
+n_jobs: -1
+
+# --------------------------------------------------------------------------
+# Input Feature Matrices
+# --------------------------------------------------------------------------
+features:
+  tfidf:
+    fingerprint: "data/features/tfidf/tfidf_fingerprint.npz"
+    traditional: "data/features/tfidf/tfidf_traditional.npz"
+  char:
+    fingerprint: "data/features/char/char_fingerprint.npz"
+    traditional: "data/features/char/char_traditional.npz"
+  style:
+    fingerprint: "data/features/style/style_fingerprint.npz"
+    traditional: "data/features/style/style_traditional.npz"
+  embedding:
+    fingerprint: "data/features/embedding/emb_fingerprint.npz"
+    traditional: "data/features/embedding/emb_traditional.npz"
+  labels:
+    fingerprint: "data/features/tfidf/labels_fingerprint.npy"
+    traditional: "data/features/tfidf/labels_traditional.npy"
+
+# --------------------------------------------------------------------------
+# Output Paths
+# --------------------------------------------------------------------------
+output:
+  models_dir: "models"
+  reports_dir: "reports/models"
+  figures_dir: "figures"
+  outputs_dir: "outputs"
+
+# --------------------------------------------------------------------------
+# Logistic Regression
+# --------------------------------------------------------------------------
+logistic_regression:
+  C: 1.0
+  max_iter: 1000
+  solver: "lbfgs"
+  multi_class: "auto"
+  class_weight: "balanced"
+  random_state: 42
+
+# --------------------------------------------------------------------------
+# Linear SVM
+# --------------------------------------------------------------------------
+linear_svm:
+  C: 1.0
+  max_iter: 2000
+  class_weight: "balanced"
+  random_state: 42
+
+# --------------------------------------------------------------------------
+# Random Forest
+# --------------------------------------------------------------------------
+random_forest:
+  n_estimators: 300
+  max_depth: 20
+  min_samples_split: 5
+  min_samples_leaf: 2
+  max_features: "sqrt"
+  class_weight: "balanced"
+  n_jobs: -1
+  random_state: 42
+
+# --------------------------------------------------------------------------
+# XGBoost
+# --------------------------------------------------------------------------
+xgboost:
+  n_estimators: 300
+  learning_rate: 0.05
+  max_depth: 6
+  subsample: 0.8
+  colsample_bytree: 0.8
+  use_label_encoder: false
+  eval_metric: "mlogloss"
+  random_state: 42
+  n_jobs: -1
+
+# --------------------------------------------------------------------------
+# Transformer Baseline (DistilBERT)
+# --------------------------------------------------------------------------
+transformer:
+  model_name: "distilbert-base-uncased"
+  max_length: 256
+  batch_size: 16
+  num_epochs: 3
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  output_dir: "models/distilbert_fingerprint"
+  device: "cpu"   # switch to "cuda" if GPU available
+
+# --------------------------------------------------------------------------
+# Evaluation
+# --------------------------------------------------------------------------
+evaluation:
+  cv_folds: 5
+  test_size: 0.20
+  val_size: 0.10
+  stratify: true
+  metrics:
+    - accuracy
+    - precision_macro
+    - recall_macro
+    - f1_macro
+    - f1_weighted
+
+# --------------------------------------------------------------------------
+# Hyperparameter Tuning
+# --------------------------------------------------------------------------
+tuning:
+  method: "optuna"      # Options: "grid", "random", "optuna"
+  n_trials: 50          # Optuna trials
+  n_iter: 20            # RandomizedSearchCV iterations
+  cv_folds: 5
+  scoring: "f1_macro"
+  n_jobs: -1
+  random_state: 42
+  timeout: 3600         # seconds per tuning run
+
+# --------------------------------------------------------------------------
+# Logging
+# --------------------------------------------------------------------------
+logging:
+  log_file: "logs/model_training.log"
+  level: "INFO"
