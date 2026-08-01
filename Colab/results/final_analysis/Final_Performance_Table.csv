@@ -1,0 +1,7 @@
+Feature Family,Best Model,Accuracy (%)
+TF-IDF,XGBoost,65.0
+Character N-Grams,Linear SVM,68.2
+Stylometric,Random Forest,67.1
+Semantic Embeddings,Logistic Regression,50.2
+Feature Fusion,XGBoost,78.37
+Hybrid Stacked Ensemble,Stacking,80.28
